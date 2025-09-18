@@ -1,18 +1,32 @@
-#include "browser_frame.h"
-#include <wx/artprov.h>
-#include "settings_manager.h"
-#include "session_manager.h"
-#include <wx/log.h>
-#include "browser_event.h"
-
-wxBEGIN_EVENT_TABLE(BrowserFrame, wxFrame)
-    EVT_MENU(BrowserConstants::ID_NEW_TAB, BrowserFrame::OnNewTab)
-    EVT_MENU(BrowserConstants::ID_CLOSE_TAB, BrowserFrame::OnCloseTab)
-    EVT_MENU(BrowserConstants::ID_BOOKMARKS, BrowserFrame::OnBookmarks)
-    EVT_MENU(BrowserConstants::ID_PRIVATE_BROWSING, BrowserFrame::OnTogglePrivateBrowsing)
-    EVT_MENU(BrowserConstants::ID_READER_MODE, BrowserFrame::OnToggleReaderMode)
-    EVT_MENU(BrowserConstants::ID_SETTINGS, BrowserFrame::OnSettings)
-    EVT_MENU(wxID_EXIT, BrowserFrame::OnExit)
-    EVT_CLOSE(BrowserFrame::OnClose)
-wxEND_EVENT_TABLE()
+BrowserFrame::BrowserFrame()
+    : wxFrame(nullptr, wxID_ANY, BrowserConstants::APP_NAME, 
+             wxDefaultPosition, wxSize(BrowserConstants::DEFAULT_WINDOW_WIDTH, BrowserConstants::DEFAULT_WINDOW_HEIGHT)),
+      m_isPrivateBrowsing(false),
+      m_bookmarkManager(std::make_unique<BookmarkManager>())
+{
+    // تهيئة مدير AUI
+    m_auiManager.SetManagedWindow(this);
+    
+    // إضافة المتصفح كمراقب للإعدادات
+    SettingsManager::GetInstance().AddObserver(this);
+    
+    // إنشاء واجهة المستخدم
+    CreateUI();
+    
+    // التحقق من عناصر القائمة
+    ValidateMenuItems();
+    
+    // استعادة الجلسة السابقة إذا كان مسموحًا
+    if (SettingsManager::GetInstance().GetBoolSetting("restore_session", true)) {
+        RestoreSession();
+    }
+    
+    // إذا لم تكن هناك علامات تبويب، أضف واحدة جديدة
+    if (m_notebook->GetPageCount() == 0) {
+        AddBrowserTab();
+    }
+    
+    // تحديث واجهة المستخدم
+    m_auiManager.Update();
+}
 

@@ -127,3 +127,57 @@ void BookmarkManager::UpdateBookmarksList() {
     if (!m_bookmarksList) {
         return;
     }
+    
+    // مسح القائمة
+    m_bookmarksList->DeleteAllItems();
+    
+    // إضافة الإشارات المرجعية
+    for (size_t i = 0; i < m_bookmarks.size(); ++i) {
+        const auto& bookmark = m_bookmarks[i];
+        
+        // التأكد من عدم وجود عناوين فارغة
+        wxString title = bookmark.GetTitle();
+        if (title.IsEmpty()) {
+            title = BrowserConstants::UNTITLED_BOOKMARK;
+        }
+        
+        long itemIndex = m_bookmarksList->InsertItem(i, title);
+        m_bookmarksList->SetItem(itemIndex, 1, bookmark.GetUrl());
+    }
+}
+
+void BookmarkManager::SaveBookmarks() {
+    // الحصول على مسار الملف
+    wxString filePath = GetBookmarksFilePath();
+    
+    // إنشاء المجلد إذا لم يكن موجوداً
+    wxString dirPath = wxFileName(filePath).GetPath();
+    wxFileName::Mkdir(dirPath, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+    
+    // فتح الملف للكتابة
+    std::ofstream file(filePath.ToStdString());
+    if (!file.is_open()) {
+        wxLogError("فشل في فتح ملف الإشارات المرجعية للكتابة: %s", filePath);
+        return;
+    }
+    
+    // كتابة الإشارات المرجعية
+    for (const auto& bookmark : m_bookmarks) {
+        file << bookmark.GetTitle().ToUTF8() << "\t"
+             << bookmark.GetUrl().ToUTF8() << "\t"
+             << bookmark.GetDateAdded().FormatISODate().ToUTF8() << "\n";
+    }
+    
+    file.close();
+}
+
+void BookmarkManager::LoadBookmarks() {
+    // الحصول على مسار الملف
+    wxString filePath = GetBookmarksFilePath();
+    
+    // التحقق من وجود الملف
+    if (!wxFileExists(filePath)) {
+        return;
+    }
+    
+}

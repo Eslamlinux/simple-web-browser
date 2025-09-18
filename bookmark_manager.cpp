@@ -110,3 +110,20 @@ void BookmarkManager::AddObserver(IBookmarkObserver* observer) {
     }
 }
 
+void BookmarkManager::RemoveObserver(IBookmarkObserver* observer) {
+    auto it = std::find(m_observers.begin(), m_observers.end(), observer);
+    if (it != m_observers.end()) {
+        m_observers.erase(it);
+    }
+}
+
+void BookmarkManager::UpdateUI() {
+    if (m_bookmarksList) {
+        UpdateBookmarksList();
+    }
+}
+
+void BookmarkManager::UpdateBookmarksList() {
+    if (!m_bookmarksList) {
+        return;
+    }

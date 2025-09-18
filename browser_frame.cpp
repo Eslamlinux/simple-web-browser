@@ -200,3 +200,159 @@ void BrowserFrame::OnToggleReaderMode(wxCommandEvent& event) {
     }
 }
 
+void BrowserFrame::OnSettings(wxCommandEvent& event) {
+    // فتح نافذة الإعدادات
+    SettingsManager::GetInstance().ShowSettingsDialog(this);
+}
+
+void BrowserFrame::OnExit(wxCommandEvent& event) {
+    Close();
+}
+
+void BrowserFrame::OnClose(wxCloseEvent& event) {
+    // حفظ الجلسة قبل الإغلاق إذا لم نكن في وضع التصفح الخاص
+    if (!m_isPrivateBrowsing) {
+        SaveSession();
+    }
+    
+    // مسح السجل عند الخروج إذا كان الإعداد مفعلًا
+    if (SettingsManager::GetInstance().GetBoolSetting("clear_history_on_exit")) {
+        for (size_t i = 0; i < m_notebook->GetPageCount(); ++i) {
+            BrowserTab* tab = static_cast<BrowserTab*>(m_notebook->GetPage(i));
+            if (tab) {
+                tab->SetPrivateBrowsing(true); // يؤدي إلى مسح البيانات عند التدمير
+            }
+        }
+    }
+    
+    event.Skip();
+}
+
+void BrowserFrame::SaveSession() {
+    // حفظ الجلسة الحالية
+    SessionManager sessionManager;
+    sessionManager.ClearSession();
+    
+    for (size_t i = 0; i < m_notebook->GetPageCount(); ++i) {
+        BrowserTab* tab = static_cast<BrowserTab*>(m_notebook->GetPage(i));
+        sessionManager.AddTabURL(tab->GetCurrentURL());
+    }
+    
+    sessionManager.SaveSession();
+}
+
+void BrowserFrame::RestoreSession() {
+    // استعادة الجلسة السابقة فقط إذا لم نكن في وضع التصفح الخاص
+    if (!m_isPrivateBrowsing) {
+        SessionManager sessionManager;
+        std::vector<wxString> urls = sessionManager.LoadSession();
+        
+        for (const auto& url : urls) {
+            if (!url.IsEmpty()) {
+                AddBrowserTab(url, false);
+            }
+        }
+    }
+}
+
+void BrowserFrame::ValidateMenuItems() {
+    if (!m_menuBar) return;
+    
+    // التحقق من جميع القوائم
+    for (size_t i = 0; i < m_menuBar->GetMenuCount(); ++i) {
+        wxMenu* menu = m_menuBar->GetMenu(i);
+        wxString menuLabel = m_menuBar->GetMenuLabel(i);
+        
+        // التأكد من أن عنوان القائمة غير فارغ
+        if (menuLabel.IsEmpty()) {
+            wxLogWarning("تم العثور على قائمة بعنوان فارغ، الفهرس: %zu", i);
+            m_menuBar->SetMenuLabel(i, wxString::Format("قائمة %zu", i+1));
+        }
+        
+        // التحقق من عناصر القائمة
+        wxMenuItemList& items = menu->GetMenuItems();
+        for (size_t j = 0; j < items.size(); ++j) {
+            wxMenuItem* item = items[j];
+            
+            // تخطي الفواصل
+            if (item->IsSeparator()) continue;
+            
+            // التأكد من أن تسمية العنصر غير فارغة
+            wxString label = item->GetItemLabelText();
+            if (label.IsEmpty() && !wxIsStockID(item->GetId())) {
+                wxLogWarning("تم العثور على عنصر قائمة بتسمية فارغة، المعرف: %d", item->GetId());
+                item->SetItemLabel(wxString::Format("عنصر %zu", j+1));
+            }
+            
+            // التحقق من القوائم الفرعية
+            wxMenu* submenu = item->GetSubMenu();
+            if (submenu) {
+                wxMenuItemList& subItems = submenu->GetMenuItems();
+                for (size_t k = 0; k < subItems.size(); ++k) {
+                    wxMenuItem* subItem = subItems[k];
+                    
+                    // تخطي الفواصل
+                    if (subItem->IsSeparator()) continue;
+                    
+                    // التأكد من أن تسمية العنصر الفرعي غير فارغة
+                    wxString subLabel = subItem->GetItemLabelText();
+                    if (subLabel.IsEmpty() && !wxIsStockID(subItem->GetId())) {
+                        wxLogWarning("تم العثور على عنصر قائمة فرعي بتسمية فارغة، المعرف: %d", subItem->GetId());
+                        subItem->SetItemLabel(wxString::Format("عنصر فرعي %zu", k+1));
+                    }
+                }
+            }
+        }
+    }
+}
+
+// تنفيذ واجهة مراقب علامة التبويب
+void BrowserFrame::OnTitleChanged(wxWindow* tab, const wxString& title) {
+    int tabIndex = m_notebook->FindPage(tab);
+    if (tabIndex != wxNOT_FOUND) {
+        wxString pageTitle = title;
+        if (pageTitle.IsEmpty()) {
+            pageTitle = BrowserConstants::UNTITLED_PAGE;
+            if (pageTitle.IsEmpty()) {
+                pageTitle = wxT("صفحة بدون عنوان");
+            }
+        }
+        m_notebook->SetPageText(tabIndex, pageTitle);
+    }
+}
+
+void BrowserFrame::OnURLChanged(wxWindow* tab, const wxString& url) {
+    // تحديث شريط الحالة بالـ URL الحالي
+    SetStatusText(url);
+}
+
+void BrowserFrame::OnBookmarkAdded(const wxString& title, const wxString& url) {
+    // يمكن إضافة منطق هنا للإشعار بإضافة إشارة مرجعية
+    SetStatusText(wxString::Format(wxT("تمت إضافة الإشارة المرجعية: %s"), title));
+}
+
+// تنفيذ واجهة مراقب الإشارات المرجعية
+void BrowserFrame::OnBookmarkSelected(const Bookmark& bookmark) {
+    // يمكن إضافة منطق هنا للتعامل مع تحديد إشارة مرجعية
+}
+
+void BrowserFrame::OnBookmarkActivated(const Bookmark& bookmark) {
+    // فتح الإشارة المرجعية في علامة التبويب الحالية
+    BrowserTab* currentTab = GetCurrentTab();
+    if (currentTab) {
+        currentTab->LoadURL(bookmark.GetUrl());
+    } else {
+        AddBrowserTab(bookmark.GetUrl());
+    }
+}
+
+// تنفيذ واجهة مراقب الإعدادات
+void BrowserFrame::OnSettingsChanged() {
+    // تحديث الإعدادات في جميع علامات التبويب
+    for (size_t i = 0; i < m_notebook->GetPageCount(); ++i) {
+        BrowserTab* tab = static_cast<BrowserTab*>(m_notebook->GetPage(i));
+        if (tab) {
+            tab->ApplySettings();
+        }
+    }
+}

@@ -180,4 +180,78 @@ void BookmarkManager::LoadBookmarks() {
         return;
     }
     
+    // فتح الملف للقراءة
+    std::ifstream file(filePath.ToStdString());
+    if (!file.is_open()) {
+        wxLogError("فشل في فتح ملف الإشارات المرجعية للقراءة: %s", filePath);
+        return;
+    }
+    
+    // قراءة الإشارات المرجعية
+    m_bookmarks.clear();
+    std::string line;
+    while (std::getline(file, line)) {
+        std::istringstream iss(line);
+        std::string title, url, date;
+        
+        if (std::getline(iss, title, '\t') && std::getline(iss, url, '\t')) {
+            Bookmark bookmark(wxString::FromUTF8(title), wxString::FromUTF8(url));
+            
+            if (std::getline(iss, date, '\t')) {
+                wxDateTime dateTime;
+                if (dateTime.ParseISODate(wxString::FromUTF8(date))) {
+                    bookmark.SetDateAdded(dateTime);
+                }
+            }
+            
+            m_bookmarks.push_back(bookmark);
+        }
+    }
+    
+    file.close();
+}
+
+wxString BookmarkManager::GetBookmarksFilePath() const {
+    wxString path = wxStandardPaths::Get().GetUserDataDir();
+    return path + wxFileName::GetPathSeparator() + "bookmarks.txt";
+}
+
+void BookmarkManager::NotifyBookmarkSelected(const Bookmark& bookmark) {
+    for (auto observer : m_observers) {
+        observer->OnBookmarkSelected(bookmark);
+    }
+}
+
+void BookmarkManager::NotifyBookmarkActivated(const Bookmark& bookmark) {
+    for (auto observer : m_observers) {
+        observer->OnBookmarkActivated(bookmark);
+    }
+}
+
+void BookmarkManager::OnBookmarkSelected(wxListEvent& event) {
+    // تمكين زر الحذف
+    m_removeButton->Enable(true);
+    
+    // إشعار المراقبين بتحديد إشارة مرجعية
+    long index = event.GetIndex();
+    if (index >= 0 && static_cast<size_t>(index) < m_bookmarks.size()) {
+        NotifyBookmarkSelected(m_bookmarks[index]);
+    }
+}
+
+void BookmarkManager::OnBookmarkActivated(wxListEvent& event) {
+    // الحصول على URL الإشارة المرجعية
+    long index = event.GetIndex();
+    if (index >= 0 && static_cast<size_t>(index) < m_bookmarks.size()) {
+        NotifyBookmarkActivated(m_bookmarks[index]);
+    }
+}
+
+void BookmarkManager::OnRemoveBookmark(wxCommandEvent& event) {
+    // الحصول على الإشارة المرجعية المحددة
+    long index = m_bookmarksList->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+    if (index != -1) {
+        RemoveBookmark(index);
+        m_removeButton->Enable(false);
+    }
 }

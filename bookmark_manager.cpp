@@ -85,3 +85,28 @@ void BookmarkManager::CreateBookmarksUI(wxWindow* parent, IBookmarkObserver* obs
     m_bookmarksList->InsertColumn(0, wxT("العنوان"), wxLIST_FORMAT_LEFT, 200);
     m_bookmarksList->InsertColumn(1, wxT("الرابط"), wxLIST_FORMAT_LEFT, 300);
     
+    // إضافة زر الحذف
+    m_removeButton = new wxButton(parent, BrowserConstants::ID_REMOVE_BOOKMARK, wxT("حذف"));
+    m_removeButton->Enable(false);
+    
+    // إضافة العناصر إلى التخطيط
+    mainSizer->Add(m_bookmarksList, 1, wxEXPAND | wxALL, 5);
+    mainSizer->Add(m_removeButton, 0, wxALL, 5);
+    
+    parent->SetSizer(mainSizer);
+    
+    // ربط الأحداث
+    m_bookmarksList->Bind(wxEVT_LIST_ITEM_SELECTED, &BookmarkManager::OnBookmarkSelected, this);
+    m_bookmarksList->Bind(wxEVT_LIST_ITEM_ACTIVATED, &BookmarkManager::OnBookmarkActivated, this);
+    m_removeButton->Bind(wxEVT_BUTTON, &BookmarkManager::OnRemoveBookmark, this);
+    
+    // تحديث القائمة
+    UpdateBookmarksList();
+}
+
+void BookmarkManager::AddObserver(IBookmarkObserver* observer) {
+    if (observer && std::find(m_observers.begin(), m_observers.end(), observer) == m_observers.end()) {
+        m_observers.push_back(observer);
+    }
+}
+

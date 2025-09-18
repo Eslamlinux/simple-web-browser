@@ -129,3 +129,74 @@ BrowserTab* BrowserFrame::AddBrowserTab(const wxString& url, bool select) {
     return tab;
 }
 
+BrowserTab* BrowserFrame::GetCurrentTab() const {
+    int index = m_notebook->GetSelection();
+    if (index != wxNOT_FOUND) {
+        return static_cast<BrowserTab*>(m_notebook->GetPage(index));
+    }
+    return nullptr;
+}
+
+void BrowserFrame::OnNewTab(wxCommandEvent& event) {
+    AddBrowserTab();
+}
+
+void BrowserFrame::OnCloseTab(wxCommandEvent& event) {
+    int index = m_notebook->GetSelection();
+    if (index != wxNOT_FOUND) {
+        m_notebook->DeletePage(index);
+        
+        // إذا لم تعد هناك علامات تبويب، أضف واحدة جديدة
+        if (m_notebook->GetPageCount() == 0) {
+            AddBrowserTab();
+        }
+    }
+}
+
+void BrowserFrame::OnBookmarks(wxCommandEvent& event) {
+    // تبديل عرض لوحة الإشارات المرجعية
+    wxAuiPaneInfo& pane = m_auiManager.GetPane("bookmarks");
+    pane.Show(!pane.IsShown());
+    m_auiManager.Update();
+    
+    // تحديث حالة زر التبديل في القائمة
+    wxMenuItem* item = m_menuBar->FindItem(BrowserConstants::ID_BOOKMARKS);
+    if (item) {
+        item->Check(pane.IsShown());
+    }
+}
+
+void BrowserFrame::OnTogglePrivateBrowsing(wxCommandEvent& event) {
+    m_isPrivateBrowsing = event.IsChecked();
+    
+    // تحديث علامات التبويب الحالية
+    for (size_t i = 0; i < m_notebook->GetPageCount(); ++i) {
+        BrowserTab* tab = static_cast<BrowserTab*>(m_notebook->GetPage(i));
+        tab->SetPrivateBrowsing(m_isPrivateBrowsing);
+    }
+    
+    // تحديث واجهة المستخدم
+    if (m_isPrivateBrowsing) {
+        SetTitle(BrowserConstants::APP_NAME + BrowserConstants::PRIVATE_MODE_SUFFIX);
+        SetBackgroundColour(wxColour(50, 50, 60));
+    } else {
+        SetTitle(BrowserConstants::APP_NAME);
+        SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
+    }
+    
+    Refresh();
+}
+
+void BrowserFrame::OnToggleReaderMode(wxCommandEvent& event) {
+    BrowserTab* currentTab = GetCurrentTab();
+    if (currentTab) {
+        currentTab->ToggleReaderMode(event.IsChecked());
+        
+        // تحديث حالة زر التبديل في القائمة
+        wxMenuItem* item = m_menuBar->FindItem(BrowserConstants::ID_READER_MODE);
+        if (item) {
+            item->Check(event.IsChecked());
+        }
+    }
+}
+

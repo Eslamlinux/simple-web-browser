@@ -23,5 +23,22 @@ public:
      */
     BrowserFrame();
     
+    /**
+     * الهادم
+     */
+    virtual ~BrowserFrame();
+    
+    // تنفيذ واجهة مراقب علامة التبويب
+    virtual void OnTitleChanged(wxWindow* tab, const wxString& title) override;
+    virtual void OnURLChanged(wxWindow* tab, const wxString& url) override;
+    virtual void OnBookmarkAdded(const wxString& title, const wxString& url) override;
+    
+    // تنفيذ واجهة مراقب الإشارات المرجعية
+    virtual void OnBookmarkSelected(const Bookmark& bookmark) override;
+    virtual void OnBookmarkActivated(const Bookmark& bookmark) override;
+    
+    // تنفيذ واجهة مراقب الإعدادات
+    virtual void OnSettingsChanged() override;
+    
 
 };

@@ -40,5 +40,43 @@ public:
     // تنفيذ واجهة مراقب الإعدادات
     virtual void OnSettingsChanged() override;
     
+private:
+    // مكونات واجهة المستخدم
+    wxNotebook* m_notebook;                         ///< دفتر علامات التبويب
+    wxMenuBar* m_menuBar;                           ///< شريط القوائم
+    wxToolBar* m_toolBar;                           ///< شريط الأدوات
+    wxAuiManager m_auiManager;                      ///< مدير AUI
+    
+    // مدراء المتصفح
+    std::unique_ptr<BookmarkManager> m_bookmarkManager;  ///< مدير الإشارات المرجعية
+    
+    // حالة المتصفح
+    bool m_isPrivateBrowsing;                       ///< ما إذا كان المتصفح في وضع التصفح الخاص
+    
+    /**
+     * إنشاء واجهة المستخدم
+     */
+    void CreateUI();
+    
+    /**
+     * إنشاء شريط القوائم
+     */
+    void CreateMenuBar();
+    
+    /**
+     * إنشاء شريط الأدوات
+     */
+    void CreateBrowserToolBar();
+    
+    /**
+     * إنشاء شريط الحالة
+     */
+    void CreateStatusBar();
+    
+    /**
+     * إنشاء اللوحات الجانبية
+     */
+    void CreateSidePanels();
+    
 
 };

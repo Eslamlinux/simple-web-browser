@@ -220,3 +220,79 @@ browser_frame.cpp.i:
 browser_frame.s: browser_frame.cpp.s
 .PHONY : browser_frame.s
 
+# target to generate assembly for a file
+browser_frame.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/browser.dir/build.make CMakeFiles/browser.dir/browser_frame.cpp.s
+.PHONY : browser_frame.cpp.s
+
+browser_tab.o: browser_tab.cpp.o
+.PHONY : browser_tab.o
+
+# target to build an object file
+browser_tab.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/browser.dir/build.make CMakeFiles/browser.dir/browser_tab.cpp.o
+.PHONY : browser_tab.cpp.o
+
+browser_tab.i: browser_tab.cpp.i
+.PHONY : browser_tab.i
+
+# target to preprocess a source file
+browser_tab.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/browser.dir/build.make CMakeFiles/browser.dir/browser_tab.cpp.i
+.PHONY : browser_tab.cpp.i
+
+browser_tab.s: browser_tab.cpp.s
+.PHONY : browser_tab.s
+
+# target to generate assembly for a file
+browser_tab.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/browser.dir/build.make CMakeFiles/browser.dir/browser_tab.cpp.s
+.PHONY : browser_tab.cpp.s
+
+session_manager.o: session_manager.cpp.o
+.PHONY : session_manager.o
+
+# target to build an object file
+session_manager.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/browser.dir/build.make CMakeFiles/browser.dir/session_manager.cpp.o
+.PHONY : session_manager.cpp.o
+
+session_manager.i: session_manager.cpp.i
+.PHONY : session_manager.i
+
+# target to preprocess a source file
+session_manager.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/browser.dir/build.make CMakeFiles/browser.dir/session_manager.cpp.i
+.PHONY : session_manager.cpp.i
+
+session_manager.s: session_manager.cpp.s
+.PHONY : session_manager.s
+
+# target to generate assembly for a file
+session_manager.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/browser.dir/build.make CMakeFiles/browser.dir/session_manager.cpp.s
+.PHONY : session_manager.cpp.s
+
+settings_manager.o: settings_manager.cpp.o
+.PHONY : settings_manager.o
+
+# target to build an object file
+settings_manager.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/browser.dir/build.make CMakeFiles/browser.dir/settings_manager.cpp.o
+.PHONY : settings_manager.cpp.o
+
+settings_manager.i: settings_manager.cpp.i
+.PHONY : settings_manager.i
+
+# target to preprocess a source file
+settings_manager.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/browser.dir/build.make CMakeFiles/browser.dir/settings_manager.cpp.i
+.PHONY : settings_manager.cpp.i
+
+settings_manager.s: settings_manager.cpp.s
+.PHONY : settings_manager.s
+
+# target to generate assembly for a file
+settings_manager.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/browser.dir/build.make CMakeFiles/browser.dir/settings_manager.cpp.s
+.PHONY : settings_manager.cpp.s

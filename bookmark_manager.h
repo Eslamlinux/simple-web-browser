@@ -95,5 +95,27 @@ private:
      * تحميل الإشارات المرجعية
      */
     void LoadBookmarks();
-
+    
+    /**
+     * الحصول على مسار ملف الإشارات المرجعية
+     * @return مسار الملف
+     */
+    wxString GetBookmarksFilePath() const;
+    
+    /**
+     * إشعار المراقبين بتحديد إشارة مرجعية
+     * @param bookmark الإشارة المرجعية المحددة
+     */
+    void NotifyBookmarkSelected(const Bookmark& bookmark);
+    
+    /**
+     * إشعار المراقبين بتنشيط إشارة مرجعية
+     * @param bookmark الإشارة المرجعية المنشطة
+     */
+    void NotifyBookmarkActivated(const Bookmark& bookmark);
+    
+    // معالجات الأحداث
+    void OnBookmarkSelected(wxListEvent& event);
+    void OnBookmarkActivated(wxListEvent& event);
+    void OnRemoveBookmark(wxCommandEvent& event);
 };

@@ -97,3 +97,126 @@ clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 clean
 .PHONY : clean
 
+# The main clean target
+clean/fast: clean
+.PHONY : clean/fast
+
+# Prepare targets for installation.
+preinstall: all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 preinstall
+.PHONY : preinstall
+
+# Prepare targets for installation.
+preinstall/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 preinstall
+.PHONY : preinstall/fast
+
+# clear depends
+depend:
+	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+.PHONY : depend
+
+#=============================================================================
+# Target rules for targets named browser
+
+# Build rule for target.
+browser: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 browser
+.PHONY : browser
+
+# fast build rule for target.
+browser/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/browser.dir/build.make CMakeFiles/browser.dir/build
+.PHONY : browser/fast
+
+bookmark_manager.o: bookmark_manager.cpp.o
+.PHONY : bookmark_manager.o
+
+# target to build an object file
+bookmark_manager.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/browser.dir/build.make CMakeFiles/browser.dir/bookmark_manager.cpp.o
+.PHONY : bookmark_manager.cpp.o
+
+bookmark_manager.i: bookmark_manager.cpp.i
+.PHONY : bookmark_manager.i
+
+# target to preprocess a source file
+bookmark_manager.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/browser.dir/build.make CMakeFiles/browser.dir/bookmark_manager.cpp.i
+.PHONY : bookmark_manager.cpp.i
+
+bookmark_manager.s: bookmark_manager.cpp.s
+.PHONY : bookmark_manager.s
+
+# target to generate assembly for a file
+bookmark_manager.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/browser.dir/build.make CMakeFiles/browser.dir/bookmark_manager.cpp.s
+.PHONY : bookmark_manager.cpp.s
+
+browser_app.o: browser_app.cpp.o
+.PHONY : browser_app.o
+
+# target to build an object file
+browser_app.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/browser.dir/build.make CMakeFiles/browser.dir/browser_app.cpp.o
+.PHONY : browser_app.cpp.o
+
+browser_app.i: browser_app.cpp.i
+.PHONY : browser_app.i
+
+# target to preprocess a source file
+browser_app.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/browser.dir/build.make CMakeFiles/browser.dir/browser_app.cpp.i
+.PHONY : browser_app.cpp.i
+
+browser_app.s: browser_app.cpp.s
+.PHONY : browser_app.s
+
+# target to generate assembly for a file
+browser_app.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/browser.dir/build.make CMakeFiles/browser.dir/browser_app.cpp.s
+.PHONY : browser_app.cpp.s
+
+browser_event.o: browser_event.cpp.o
+.PHONY : browser_event.o
+
+# target to build an object file
+browser_event.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/browser.dir/build.make CMakeFiles/browser.dir/browser_event.cpp.o
+.PHONY : browser_event.cpp.o
+
+browser_event.i: browser_event.cpp.i
+.PHONY : browser_event.i
+
+# target to preprocess a source file
+browser_event.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/browser.dir/build.make CMakeFiles/browser.dir/browser_event.cpp.i
+.PHONY : browser_event.cpp.i
+
+browser_event.s: browser_event.cpp.s
+.PHONY : browser_event.s
+
+# target to generate assembly for a file
+browser_event.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/browser.dir/build.make CMakeFiles/browser.dir/browser_event.cpp.s
+.PHONY : browser_event.cpp.s
+
+browser_frame.o: browser_frame.cpp.o
+.PHONY : browser_frame.o
+
+# target to build an object file
+browser_frame.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/browser.dir/build.make CMakeFiles/browser.dir/browser_frame.cpp.o
+.PHONY : browser_frame.cpp.o
+
+browser_frame.i: browser_frame.cpp.i
+.PHONY : browser_frame.i
+
+# target to preprocess a source file
+browser_frame.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/browser.dir/build.make CMakeFiles/browser.dir/browser_frame.cpp.i
+.PHONY : browser_frame.cpp.i
+
+browser_frame.s: browser_frame.cpp.s
+.PHONY : browser_frame.s
+

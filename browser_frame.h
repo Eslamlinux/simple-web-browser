@@ -78,5 +78,45 @@ private:
      */
     void CreateSidePanels();
     
-
+    /**
+     * إضافة علامة تبويب جديدة
+     * @param url عنوان URL المراد تحميله
+     * @param select ما إذا كان يجب تحديد علامة التبويب الجديدة
+     * @return مؤشر إلى علامة التبويب الجديدة
+     */
+    BrowserTab* AddBrowserTab(const wxString& url = BrowserConstants::DEFAULT_HOMEPAGE, bool select = true);
+    
+    // معالجات الأحداث
+    void OnNewTab(wxCommandEvent& event);
+    void OnCloseTab(wxCommandEvent& event);
+    void OnBookmarks(wxCommandEvent& event);
+    void OnTogglePrivateBrowsing(wxCommandEvent& event);
+    void OnToggleReaderMode(wxCommandEvent& event);
+    void OnSettings(wxCommandEvent& event);
+    void OnExit(wxCommandEvent& event);
+    void OnClose(wxCloseEvent& event);
+    
+    /**
+     * الحصول على علامة التبويب الحالية
+     * @return مؤشر إلى علامة التبويب الحالية، أو nullptr إذا لم تكن هناك علامة تبويب
+     */
+    BrowserTab* GetCurrentTab() const;
+    
+    /**
+     * حفظ الجلسة
+     */
+    void SaveSession();
+    
+    /**
+     * استعادة الجلسة
+     */
+    void RestoreSession();
+    
+    /**
+     * التحقق من صحة عناصر القائمة
+     * التأكد من أن جميع عناصر القائمة لها تسميات غير فارغة
+     */
+    void ValidateMenuItems();
+    
+    wxDECLARE_EVENT_TABLE();
 };

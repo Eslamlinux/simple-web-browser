@@ -70,5 +70,30 @@ public:
      */
     void RemoveObserver(IBookmarkObserver* observer);
 
+private:
+    std::vector<Bookmark> m_bookmarks;                ///< قائمة الإشارات المرجعية
+    std::vector<IBookmarkObserver*> m_observers;      ///< قائمة المراقبين
+    wxListCtrl* m_bookmarksList;                      ///< قائمة عرض الإشارات المرجعية
+    wxButton* m_removeButton;                         ///< زر حذف الإشارة المرجعية
+    
+    /**
+     * تحديث واجهة المستخدم
+     */
+    void UpdateUI();
+    
+    /**
+     * تحديث قائمة الإشارات المرجعية
+     */
+    void UpdateBookmarksList();
+    
+    /**
+     * حفظ الإشارات المرجعية
+     */
+    void SaveBookmarks();
+    
+    /**
+     * تحميل الإشارات المرجعية
+     */
+    void LoadBookmarks();
 
 };

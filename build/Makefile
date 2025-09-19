@@ -296,3 +296,47 @@ settings_manager.s: settings_manager.cpp.s
 settings_manager.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/browser.dir/build.make CMakeFiles/browser.dir/settings_manager.cpp.s
 .PHONY : settings_manager.cpp.s
+
+# Help Target
+help:
+	@echo "The following are some of the valid targets for this Makefile:"
+	@echo "... all (the default if no target is provided)"
+	@echo "... clean"
+	@echo "... depend"
+	@echo "... edit_cache"
+	@echo "... rebuild_cache"
+	@echo "... browser"
+	@echo "... bookmark_manager.o"
+	@echo "... bookmark_manager.i"
+	@echo "... bookmark_manager.s"
+	@echo "... browser_app.o"
+	@echo "... browser_app.i"
+	@echo "... browser_app.s"
+	@echo "... browser_event.o"
+	@echo "... browser_event.i"
+	@echo "... browser_event.s"
+	@echo "... browser_frame.o"
+	@echo "... browser_frame.i"
+	@echo "... browser_frame.s"
+	@echo "... browser_tab.o"
+	@echo "... browser_tab.i"
+	@echo "... browser_tab.s"
+	@echo "... session_manager.o"
+	@echo "... session_manager.i"
+	@echo "... session_manager.s"
+	@echo "... settings_manager.o"
+	@echo "... settings_manager.i"
+	@echo "... settings_manager.s"
+.PHONY : help
+
+
+
+#=============================================================================
+# Special targets to cleanup operation of make.
+
+# Special rule to run CMake to check the build system integrity.
+# No rule that depends on this can have commands that come from listfiles
+# because they might be regenerated.
+cmake_check_build_system:
+	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+.PHONY : cmake_check_build_system
